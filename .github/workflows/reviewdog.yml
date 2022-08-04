@@ -15,6 +15,14 @@ jobs:
           cond: ${{ github.event_name == 'pull_request' }}
           if_true: "github-pr-review"
           if_false: "github-check"
+      - name: Check generate files
+        id: generate
+        run: |
+          result=$(grep -l -F "DO NOT EDIT" -R .)
+          files="${result//$'\n'/\\n}"
+          echo "::set-output name=files::$files"
+      - name: Exclude Files echo
+        run: echo ${{ steps.generate.outputs.files }}
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
@@ -23,4 +31,4 @@ jobs:
             *.go
           exclude: |
             ./.git/*
-            ./examples/resources/*
+            ${{ steps.generate.outputs.files }}
