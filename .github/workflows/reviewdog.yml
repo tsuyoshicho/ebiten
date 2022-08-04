@@ -19,8 +19,9 @@ jobs:
         id: generate
         run: |
           result=$(grep -l -F "DO NOT EDIT" -R .)
-          files="${result//$'\n'/\\n}"
-          echo "::set-output name=files::$files"
+          # files="${result//$'\n'/\\n}"
+          # echo "::set-output name=files::$files"
+          echo "::set-output name=files::$result"
       - name: Exclude Files echo
         run: echo ${{ steps.generate.outputs.files }}
       - name: misspell
@@ -30,5 +31,5 @@ jobs:
           pattern: |
             *.go
           exclude: |
-            ./.git/*
             ${{ steps.generate.outputs.files }}
+            ./.git/*
