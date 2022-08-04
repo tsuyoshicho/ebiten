@@ -16,12 +16,10 @@ jobs:
           if_true: "github-pr-review"
           if_false: "github-check"
       - name: Check generate files
-        uses: gh640/command-result-action@v1
+        uses: gh640/command-result-action@v1  # see https://gotohayato.com/content/558/
         id: generate
         with:
           command: grep -l -F "DO NOT EDIT" -R .
-      - name: Exclude Files echo
-        run: echo ${{ steps.generate.outputs.stdout }}
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
