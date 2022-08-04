@@ -16,14 +16,12 @@ jobs:
           if_true: "github-pr-review"
           if_false: "github-check"
       - name: Check generate files
+        uses: gh640/command-result-action@v1
         id: generate
-        run: |
-          result=$(grep -l -F "DO NOT EDIT" -R .)
-          # files="${result//$'\n'/\\n}"
-          # echo "::set-output name=files::$files"
-          echo "::set-output name=files::$result"
+        with:
+          command: grep -l -F "DO NOT EDIT" -R .
       - name: Exclude Files echo
-        run: echo ${{ steps.generate.outputs.files }}
+        run: echo ${{ steps.generate.outputs.stdout }}
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
@@ -31,5 +29,5 @@ jobs:
           pattern: |
             *.go
           exclude: |
-            ${{ steps.generate.outputs.files }}
+            ${{ steps.generate.outputs.stdout }}
             ./.git/*
